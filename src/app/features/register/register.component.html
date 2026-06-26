@@ -1,0 +1,134 @@
+<main class="shell">
+  <!-- Brand panel -->
+  <aside class="brand">
+    <div>
+      <div class="mark">
+        <svg width="46" height="50" viewBox="0 0 46 50" fill="none"><path d="M23 3 L43 47 H33 L23 22 L13 47 H3 Z" fill="#fff"/><path d="M19 38 H27 L23 28 Z" fill="#2BC9C2"/></svg>
+        <div class="wordmark">ATHR</div>
+      </div>
+      <div class="tagline"><span class="ln"></span>Discover Talent · Create Impact</div>
+    </div>
+    <div class="brand-copy">
+      <h1 [innerHTML]="t.brandTitle"></h1>
+      <p>{{ t.brandSub }}</p>
+      <div class="wave">
+        <i style="animation-delay:0s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.3s"></i>
+        <i style="animation-delay:.45s"></i><i style="animation-delay:.6s"></i><i style="animation-delay:.3s"></i>
+        <i style="animation-delay:.15s"></i><i style="animation-delay:0s"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Form panel -->
+  <section class="form">
+    <div class="langbar">
+      <a class="home-link" routerLink="/">← Home</a>
+    </div>
+
+    <!-- Form -->
+    <div *ngIf="!success">
+      <div class="head">
+        <h2>{{ t.heading }}</h2>
+        <p class="sub">{{ t.sub }}</p>
+      </div>
+
+      <div class="formError" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field" [class.invalid]="invalid('fullNameArabic')">
+          <label>{{ t.lblName }} <span class="req">*</span></label>
+          <input class="ctrl" formControlName="fullNameArabic" type="text" [placeholder]="t.phName" />
+          <div class="err" *ngIf="invalid('fullNameArabic')">{{ t.errName }}</div>
+        </div>
+
+        <div class="row">
+          <div class="field" [class.invalid]="invalid('phoneNumber')">
+            <label>{{ t.lblPhone }} <span class="req">*</span></label>
+            <input class="ctrl" formControlName="phoneNumber" type="tel" inputmode="numeric" [placeholder]="t.phPhone" />
+            <div class="err" *ngIf="invalid('phoneNumber')">{{ t.errPhone }}</div>
+          </div>
+          <div class="field" [class.invalid]="invalid('age')">
+            <label>{{ t.lblAge }} <span class="req">*</span></label>
+            <input class="ctrl" formControlName="age" type="number" min="10" max="100" [placeholder]="t.phAge" />
+            <div class="err" *ngIf="invalid('age')">{{ t.errAge }}</div>
+          </div>
+        </div>
+
+        <div class="field" [class.invalid]="invalid('location')">
+          <label>{{ t.lblLocation }} <span class="req">*</span></label>
+          <input class="ctrl" formControlName="location" type="text" [placeholder]="t.phLocation" />
+          <div class="err" *ngIf="invalid('location')">{{ t.errLocation }}</div>
+        </div>
+
+        <div class="field" [class.invalid]="invalid('englishLevel')">
+          <label>{{ t.lblLevel }} <span class="req">*</span></label>
+          <div class="levels">
+            <button type="button" *ngFor="let l of levels"
+              [attr.aria-pressed]="form.value.englishLevel===l" (click)="selectLevel(l)">
+              {{ l }}<small>{{ lvlLabel(l) }}</small>
+            </button>
+          </div>
+          <div class="err" *ngIf="invalid('englishLevel')">{{ t.errLevel }}</div>
+        </div>
+
+        <div class="field" [class.invalid]="invalid('availability')">
+          <label>{{ t.lblAvail }} <span class="req">*</span></label>
+          <div class="availability">
+            <button type="button" [attr.aria-pressed]="form.value.availability==='Full-time'" (click)="selectAvailability('Full-time')">{{ t.availFull }}</button>
+            <button type="button" [attr.aria-pressed]="form.value.availability==='Part-time'" (click)="selectAvailability('Part-time')">{{ t.availPart }}</button>
+          </div>
+          <div class="err" *ngIf="invalid('availability')">{{ t.errAvail }}</div>
+        </div>
+
+        <div class="field">
+          <label>{{ t.lblWork }} <span class="opt">{{ t.optional }}</span></label>
+          <textarea class="ctrl" formControlName="workExperience" rows="3" [placeholder]="t.phWork"></textarea>
+        </div>
+
+        <div class="field">
+          <label>{{ t.lblReferrals }} <span class="opt">{{ t.optional }}</span></label>
+          <input class="ctrl" formControlName="referrals" type="text" [placeholder]="t.phReferrals" />
+        </div>
+
+        <!-- Voice note -->
+        <div class="field">
+          <label>{{ t.lblVoice }} <span class="opt">{{ t.optional }}</span></label>
+          <p class="voice-hint">{{ t.voiceHint }}</p>
+          <div class="voice-box">
+            <div class="voice-row">
+              <button type="button" class="vbtn vbtn-rec" *ngIf="!recording" (click)="startRecording()">
+                <span class="vdot"></span>{{ t.vStart }}
+              </button>
+              <button type="button" class="vbtn vbtn-stop" *ngIf="recording" (click)="stopRecording()">
+                <span class="vsq"></span>{{ t.vStop }}
+              </button>
+              <span class="vtimer" *ngIf="recording">{{ timerLabel }}</span>
+              <span class="vmax">{{ t.vMax }}</span>
+            </div>
+            <div class="voice-player" *ngIf="audioUrl">
+              <audio [src]="audioUrl" controls></audio>
+              <button type="button" class="vbtn vbtn-del" (click)="deleteRecording()">{{ t.vDelete }}</button>
+            </div>
+            <p class="voice-status" *ngIf="voiceStatusKey" [class.warn]="voiceStatusWarn">{{ voiceStatusText }}</p>
+          </div>
+        </div>
+
+        <button type="submit" class="submit" [disabled]="submitting">
+          <span class="spinner" *ngIf="submitting"></span>
+          <span *ngIf="!submitting">{{ t.submit }}</span>
+          <span *ngIf="submitting">{{ t.submitting }}</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Success -->
+    <div class="done" *ngIf="success">
+      <div class="badge">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4 10-11" stroke="#16A0A1" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2>{{ t.doneTitle }}</h2>
+      <p>{{ t.doneBody }}</p>
+      <button type="button" (click)="registerAnother()">{{ t.again }}</button>
+    </div>
+  </section>
+</main>

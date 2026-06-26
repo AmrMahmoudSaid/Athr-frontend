@@ -1,0 +1,164 @@
+<!-- Login -->
+<div class="login-wrap" *ngIf="!auth.isLoggedIn">
+  <div class="login-card">
+    <div class="mark">
+      <svg width="34" height="37" viewBox="0 0 46 50" fill="none"><path d="M23 3 L43 47 H33 L23 22 L13 47 H3 Z" fill="#0E2A4E"/><path d="M19 38 H27 L23 28 Z" fill="#2BC9C2"/></svg>
+      <span class="wm">ATHR</span>
+    </div>
+    <h2>Admin Dashboard</h2>
+    <form (ngSubmit)="login()">
+      <label>Username</label>
+      <input class="ctrl" name="username" [(ngModel)]="username" autocomplete="username" />
+      <label>Password</label>
+      <input class="ctrl" name="password" type="password" [(ngModel)]="password" autocomplete="current-password" />
+      <button type="submit" class="btn btn-primary">Log in</button>
+      <div class="login-err" *ngIf="loginError">{{ loginError }}</div>
+    </form>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div *ngIf="auth.isLoggedIn">
+  <div class="topbar">
+    <div class="mark">
+      <svg width="26" height="28" viewBox="0 0 46 50" fill="none"><path d="M23 3 L43 47 H33 L23 22 L13 47 H3 Z" fill="#fff"/><path d="M19 38 H27 L23 28 Z" fill="#2BC9C2"/></svg>
+      <span class="wm">ATHR</span><span class="role">ADMIN</span>
+    </div>
+    <button class="btn logout" (click)="logout()">Log out</button>
+  </div>
+
+  <div class="wrap">
+    <!-- counters -->
+    <div class="counters">
+      <div class="counter"><div class="n">{{ stats.total }}</div><div class="l">Total Applicants</div></div>
+      <div class="counter"><div class="n">{{ stats.withVoice }}</div><div class="l">With Voice Notes</div></div>
+      <div class="counter"><div class="n">{{ stats.withoutVoice }}</div><div class="l">Without Voice Notes</div></div>
+      <div class="counter ok"><div class="n">{{ stats.accepted }}</div><div class="l">Accepted</div></div>
+      <div class="counter bad"><div class="n">{{ stats.rejected }}</div><div class="l">Rejected</div></div>
+      <div class="counter pend"><div class="n">{{ stats.pending }}</div><div class="l">Pending</div></div>
+    </div>
+
+    <!-- tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="tab==='applicants'" (click)="tab='applicants'">Applicants</button>
+      <button class="tab" [class.active]="tab==='export'" (click)="tab='export'">Export Candidates</button>
+    </div>
+
+    <!-- Applicants -->
+    <div *ngIf="tab==='applicants'">
+      <div class="toolbar">
+        <input class="search" type="search" placeholder="Search by phone number…" inputmode="numeric"
+          [(ngModel)]="search" (ngModelChange)="onSearch()" />
+        <div class="filter-group">
+          <label>Status</label>
+          <select class="select" [(ngModel)]="statusFilter" (ngModelChange)="resetAndLoad()">
+            <option value="all">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Voice</label>
+          <select class="select" [(ngModel)]="voiceFilter" (ngModelChange)="resetAndLoad()">
+            <option value="all">All</option>
+            <option value="has-voice">Has Voice Note</option>
+            <option value="no-voice">No Voice Note</option>
+          </select>
+        </div>
+        <span class="count-pill">{{ total }} {{ total === 1 ? 'applicant' : 'applicants' }}</span>
+      </div>
+
+      <div class="loading" *ngIf="loading">Loading…</div>
+      <div class="empty" *ngIf="!loading && total === 0">No applicants found.</div>
+
+      <div class="grid" *ngIf="!loading">
+        <div class="app-card" *ngFor="let a of applicants">
+          <div class="name">{{ a.fullNameArabic }}</div>
+          <div class="meta">
+            <div><b>Email:</b> {{ a.email || '—' }}</div>
+            <div><b>Phone:</b> {{ a.phoneNumber }}</div>
+            <div><b>Age:</b> {{ a.age }} &nbsp;·&nbsp; <b>Location:</b> {{ a.location }}</div>
+            <div><b>Availability:</b> {{ a.availability || '—' }}</div>
+            <div><b>Work experience:</b> {{ a.workExperience || '—' }}</div>
+            <div><b>Referrals:</b> {{ a.referrals || '—' }}</div>
+            <div><b>Submitted:</b> {{ a.createdAt | date:'medium' }}</div>
+            <div style="margin-top:6px">
+              <span class="badge" [class.voice]="a.hasVoiceNote" [class.novoice]="!a.hasVoiceNote">
+                {{ a.hasVoiceNote ? 'Has voice note' : 'No voice note' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="fld">
+              <label>English Level</label>
+              <select class="select" [(ngModel)]="a.englishLevel">
+                <option *ngFor="let l of levels" [value]="l">{{ l }}</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label>Recruitment Status</label>
+              <select class="select" [(ngModel)]="a.recruitmentStatus">
+                <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="audio-area" *ngIf="a.voiceUrl">
+            <audio [src]="a.voiceUrl" controls></audio>
+            <a class="btn btn-ghost dl" [href]="a.voiceUrl" [download]="'voice-' + a._id + '.webm'">⬇ Download</a>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn btn-ghost" *ngIf="a.hasVoiceNote && !a.voiceUrl" [disabled]="a.voiceLoading" (click)="loadVoice(a)">
+              {{ a.voiceLoading ? 'Loading…' : '▶ Load voice note' }}
+            </button>
+            <button class="btn btn-save" [disabled]="a.saving" (click)="save(a)">Save</button>
+            <span class="saved-tick" *ngIf="a.saved">✓ Saved</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pager" *ngIf="total > 0">
+        <button [disabled]="page <= 1" (click)="prevPage()">‹ Prev</button>
+        <span class="info">Page {{ page }} of {{ pages }}</span>
+        <button [disabled]="page >= pages" (click)="nextPage()">Next ›</button>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div *ngIf="tab==='export'">
+      <div class="export-card">
+        <h3>Export Candidates</h3>
+        <p>Select an English level and download the matching candidates as an Excel file.</p>
+        <div class="row">
+          <div>
+            <label>English Level</label>
+            <select class="select" [(ngModel)]="exportLevel">
+              <option value="all">All Levels</option>
+              <option *ngFor="let l of levels" [value]="l">{{ l }}</option>
+            </select>
+          </div>
+          <div>
+            <label>Recruitment Status</label>
+            <select class="select" [(ngModel)]="exportStatus">
+              <option value="all">All</option>
+              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div>
+            <label>Availability</label>
+            <select class="select" [(ngModel)]="exportAvailability">
+              <option value="all">All</option>
+              <option *ngFor="let av of availabilities" [value]="av">{{ av }}</option>
+            </select>
+          </div>
+          <button class="btn btn-export" [disabled]="exporting" (click)="exportExcel()">
+            {{ exporting ? 'Exporting…' : 'Export to Excel' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

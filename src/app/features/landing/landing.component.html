@@ -1,0 +1,104 @@
+<header class="nav">
+  <div class="wrap">
+    <div class="brandmark">
+      <svg width="30" height="33" viewBox="0 0 46 50" fill="none"><path d="M23 3 L43 47 H33 L23 22 L13 47 H3 Z" fill="#fff"/><path d="M19 38 H27 L23 28 Z" fill="#2BC9C2"/></svg>
+      <span class="wm">ATHR</span>
+    </div>
+    <div class="nav-right">
+      <a class="btn btn-primary" routerLink="/register">{{ t.navCta }}</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">{{ t.eyebrow }}</span>
+      <h1 [innerHTML]="t.heroTitle"></h1>
+      <p>{{ t.heroSub }}</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" routerLink="/register">{{ t.heroCta }}</a>
+        <a class="btn ghost" (click)="scrollTo('how')">{{ t.heroSecondary }}</a>
+      </div>
+    </div>
+
+    <div class="callcard">
+      <span class="livepill"><span class="livedot"></span><span>{{ t.onCall }}</span></span>
+      <div class="headstage">
+        <span class="rings"></span>
+        <svg width="150" height="150" viewBox="0 0 200 200" fill="none">
+          <path d="M48 112 V96 a52 52 0 0 1 104 0 V112" stroke="#EAF6F6" stroke-width="9" stroke-linecap="round"/>
+          <rect x="34" y="104" width="26" height="50" rx="11" fill="#2BC9C2"/>
+          <rect x="140" y="104" width="26" height="50" rx="11" fill="#EAF6F6"/>
+          <path d="M153 152 q4 34 -30 38 h-10" stroke="#EAF6F6" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <circle cx="108" cy="190" r="9" fill="#2BC9C2"/>
+        </svg>
+      </div>
+      <div class="eq" aria-hidden="true">
+        <i style="animation-delay:0s"></i><i style="animation-delay:.12s"></i><i style="animation-delay:.24s"></i>
+        <i style="animation-delay:.36s"></i><i style="animation-delay:.5s"></i><i style="animation-delay:.3s"></i>
+        <i style="animation-delay:.18s"></i><i style="animation-delay:.42s"></i><i style="animation-delay:.1s"></i>
+        <i style="animation-delay:.28s"></i><i style="animation-delay:.4s"></i><i style="animation-delay:.06s"></i>
+      </div>
+      <div class="callmeta"><span>{{ t.callQuality }}</span><span>EN · A1 → C2</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <span class="kicker">{{ t.whoKicker }}</span>
+    <h2>{{ t.whoTitle }}</h2>
+    <p class="lead">{{ t.whoBody }}</p>
+  </div>
+</section>
+
+<section class="sec" id="how" style="padding-top:0">
+  <div class="wrap">
+    <span class="kicker">{{ t.howKicker }}</span>
+    <h2>{{ t.howTitle }}</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 6h14M5 12h14M5 18h9" stroke="#16A0A1" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="no">01</div><h3>{{ t.s1t }}</h3><p>{{ t.s1b }}</p>
+      </div>
+      <div class="step">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3a4 4 0 0 1 4 4v4a4 4 0 0 1-8 0V7a4 4 0 0 1 4-4Z" stroke="#16A0A1" stroke-width="2"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="#16A0A1" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="no">02</div><h3>{{ t.s2t }}</h3><p>{{ t.s2b }}</p>
+      </div>
+      <div class="step">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 4h3l2 5-2 1a11 11 0 0 0 5 5l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="#16A0A1" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <div class="no">03</div><h3>{{ t.s3t }}</h3><p>{{ t.s3b }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec valsec">
+  <div class="wrap">
+    <span class="kicker">{{ t.whyKicker }}</span>
+    <h2>{{ t.whyTitle }}</h2>
+    <div class="vals">
+      <div class="val"><span class="tick">✓</span><div><h4>{{ t.v1t }}</h4><p>{{ t.v1b }}</p></div></div>
+      <div class="val"><span class="tick">✓</span><div><h4>{{ t.v2t }}</h4><p>{{ t.v2b }}</p></div></div>
+      <div class="val"><span class="tick">✓</span><div><h4>{{ t.v3t }}</h4><p>{{ t.v3b }}</p></div></div>
+      <div class="val"><span class="tick">✓</span><div><h4>{{ t.v4t }}</h4><p>{{ t.v4b }}</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <span class="kicker">{{ t.finalKicker }}</span>
+    <h2>{{ t.finalTitle }}</h2>
+    <p>{{ t.finalSub }}</p>
+    <a class="btn btn-primary btn-lg" routerLink="/register">{{ t.finalCta }}</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>{{ t.footer }}</div>
+    <div class="tg">Discover Talent · Create Impact</div>
+  </div>
+</footer>

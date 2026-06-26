@@ -1,0 +1,10 @@
+:root{
+  --navy:#0E2A4E;--navy-deep:#08203B;--teal:#16A0A1;--teal-bright:#2BC9C2;
+  --bg:#F1F5F8;--card:#FFFFFF;--ink:#10243F;--muted:#5C6E84;--border:#E3EAF0;
+  --danger:#D64B5A;--ok:#16A34A;--warn:#D9822B;--r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{text-decoration:none;color:inherit}
+.hidden{display:none !important}
