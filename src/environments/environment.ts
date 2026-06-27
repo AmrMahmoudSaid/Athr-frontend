@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/api/v1',
+  production: true,
+  apiUrl: 'https://athr-backend-app-pk7fk.ondigitalocean.app/api/v1',
 };
